@@ -1,5 +1,31 @@
 class Ion:
-    def __init__(self, element, ionisation, possible_lines = {}):
+    """
+    Ion object using 'pyneb'. 
+
+    Upon initialising, creates Atom and RecAtom classes if possible, responsible for calculating
+    collisional and recombination line strengths, respectively. 
+
+    Arguments:
+    - element (str): Atomic symbol for element, e.g. 'H'. 
+    - ionisation (int): Ionisation of atom, e.g. '1' for neutral atoms. 
+    - possible_lines (dict): Dictionary containing the wavelengths of emission lines (keys),
+    and a list containing the transition label (see pyneb docs) and type (value). 
+
+    Methods:
+    - getEmissivity(label, temperature, density, linestype):
+        Function responsible for calculating collisional / recombination coefficients using pyneb. 
+
+        Arguments:
+        - label: pyneb label, e.g. '3_2' for Balmer alpha. 
+        - temperature (default=1e4): electron temperature (K). Can be array / list for multiple temperatures. 
+        - density (default=1e3): electron density (cm^-3). Can be array / list for multiple densities. 
+        - line_type (default='collisional'): type of emission line, i.e. determining which 'pyneb' atom
+        class to use for line strength calculation.  
+
+        Returns:
+        - Emissivity value for the given emission line. 
+    """
+    def __init__(self, element, ionisation, possible_lines:dict={}):
         from pyneb import Atom, RecAtom
 
         self.element = element
@@ -35,6 +61,13 @@ class Ion:
 class AllIons:
     """
     Object containing all Ion objects, for easier implementation. 
+    The Ion objects were chosen based on pyneb availability and line strengths observed in PN6563 spectra. 
+
+    Methods:
+    - intoList():
+        Convenience function which returns a list containing all Ion objects. 
+    - getPairs():
+        Convenience function which returns a zip() containing all Ion Objects, wavelengths, labels, and line types. 
     """
     def __init__(self):
         # Hydrogen
